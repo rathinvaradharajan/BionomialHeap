@@ -4,12 +4,14 @@ class ElementNode:
         self.degree = degree
         self.rest = rest
         self.children = children
+        self.parent = None
 
     def add_child(self, node):
         if self.children is None:
             self.children = [node]
         else:
             self.children.append(node)
+        node.parent = self
 
     def compute_degree(self):
         self.degree = self.__compute_degree(self)

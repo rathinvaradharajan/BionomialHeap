@@ -60,7 +60,7 @@ class BinomialHeap:
         if self.head is None:
             return -1
         node = self.head
-        ptr_to_min = None
+        ptr_to_min = ElementNode(-99, 0, self.head)
         minimum = self.head.value
         while node.rest is not None:
             if minimum > node.rest.value:
@@ -70,17 +70,84 @@ class BinomialHeap:
         children = ptr_to_min.rest.children
         for i in range(0, len(children) - 1):
             children[i].rest = children[i + 1]
-        if ptr_to_min is not None:
+        if ptr_to_min.value != -99:
             ptr_to_min.rest = children[0]
         else:
             self.head = children[0]
         self.__validate()
         return minimum
 
+    def __find_in_tree(self, node, key):
+        if node.children is None:
+            return None
+        queue = [i for i in node.children]
+        while len(queue) > 0:
+            node = queue.pop(0)
+            if node.value == key:
+                return node
+            if node.children is not None:
+                for i in node.children:
+                    queue.append(i)
+
+    def __find_key(self, node, key) -> ElementNode:
+        while node is not None:
+            if node.value == key:
+                return node
+            if node.children is not None:
+                for i in node.children:
+                    if i.value == key:
+                        return i
+                    else:
+                        found = self.__find_in_tree(i, key)
+                        if found is not None:
+                            return found
+            node = node.rest
+        return None
+
+    def decrease_key(self, key):
+        node = self.__find_key(self.head, key)
+        if node is None:
+            return None
+        node.value = node.value - 1
+        while node.parent is not None and node.parent.value > node.value:
+            temp = node.value
+            node.value = node.parent.value
+            node.parent.value = temp
+            node = node.parent
+
+    def delete(self, key):
+        node = self.__find_key(self.head, key)
+        if node is None:
+            return None
+        node.value = 0
+        while node.parent is not None and node.parent.value > node.value:
+            temp = node.value
+            node.value = node.parent.value
+            node.parent.value = temp
+            node = node.parent
+        self.extract_min()
+
+    def make_heap(self, values: [int]):
+        for i in values:
+            self.insert(i)
+
+    def __print_children(self, node) -> str:
+        if node.children is None:
+            return ""
+        queue = [i for i in node.children]
+        res = ""
+        while len(queue) > 0:
+            x = queue.pop(0)
+            res += " " + str(x.value)
+            if x.children is not None:
+                for i in x.children:
+                    queue.append(i)
+        return res
+
     def __str__(self) -> str:
         node = self.head
         result = ""
         while node is not None:
-            result += str(node.value) + "|" + str(node.degree) + "\t"
+            result += str(node.value) + "|" + str(node.degree) + ": " + self.__print_children(node) + "\n"
             node = node.rest
         return result
