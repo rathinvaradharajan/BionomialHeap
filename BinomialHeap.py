@@ -30,7 +30,7 @@ class BinomialHeap:
     def __validate(self):
         previous = None
         node = self.head
-        while node.rest is not None:
+        while node and node.rest is not None:
             if node.degree == node.rest.degree:
                 new_node = self.__union(node, node.rest)
                 if previous is None:
@@ -38,7 +38,7 @@ class BinomialHeap:
                     node = self.head
                 else:
                     previous.rest = new_node
-                    new_node.rest = node.rest.rest
+                    new_node.rest = node.rest.rest if node.rest is not None else None
                     previous = new_node
                     node = new_node.rest
             else:
@@ -143,6 +143,13 @@ class BinomialHeap:
                 for i in x.children:
                     queue.append(i)
         return res
+
+    def union(self, another):
+        node = self.head
+        while node.rest is not None:
+            node = node.rest
+        node.rest = another.head
+        self.__validate()
 
     def __str__(self) -> str:
         node = self.head
