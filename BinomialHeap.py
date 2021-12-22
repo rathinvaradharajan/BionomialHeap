@@ -2,10 +2,47 @@ from ElementNode import ElementNode
 
 
 class BinomialHeap:
+    """
+    This class represents a binomial heap.
+
+    Attributes
+    ----------
+    head: ElementNode
+        The start node of the binomial heap.
+
+    Methods
+    -------
+    insert(value: int):
+        Insert a value into the heap.
+
+    min() -> int:
+        Get the min value in the heap.
+
+    extract_min() -> int:
+        Remove the min element from the heap.
+
+    decrease_key(key: int):
+        Decrease the value of the key by 1.
+
+    delete(key: int):
+        Delete the key from the heap.
+
+    make_heap(values: [int]):
+        add the values into the heap.
+
+    union(another: BinomialHeap):
+        Combine another heap with this one.
+    """
+
     def __init__(self):
         self.head = None
 
     def insert(self, value: int):
+        """
+        Insert an element into the heap.
+
+        :param value: the value to be inserted.
+        """
         if self.head is None:
             self.head = ElementNode(value)
         else:
@@ -46,6 +83,11 @@ class BinomialHeap:
                 node = node.rest
 
     def min(self) -> int:
+        """
+        Find the min value in the heap.
+
+        :return: the min value in the heap. -1 if the heap is empty.
+        """
         if self.head is None:
             return -1
         node = self.head
@@ -57,6 +99,11 @@ class BinomialHeap:
         return minimum
 
     def extract_min(self) -> int:
+        """
+        Return the min value and remove it from the heap.
+
+        :return: the min value in the heap. -1 if the heap is empty.
+        """
         if self.head is None:
             return -1
         node = self.head
@@ -105,6 +152,11 @@ class BinomialHeap:
         return None
 
     def decrease_key(self, key):
+        """
+        Decrease the value of the key by 1.
+
+        :param key: the value in the heap to be decreased.
+        """
         node = self.__find_key(self.head, key)
         if node is None:
             return None
@@ -116,6 +168,11 @@ class BinomialHeap:
             node = node.parent
 
     def delete(self, key):
+        """
+        Delete the key from the heap.
+
+        :param key: the key to be deleted.
+        """
         node = self.__find_key(self.head, key)
         if node is None:
             return None
@@ -128,6 +185,11 @@ class BinomialHeap:
         self.extract_min()
 
     def make_heap(self, values: [int]):
+        """
+        Insert the values into the heap.
+
+        :param values: the values to be inserted.
+        """
         for i in values:
             self.insert(i)
 
@@ -145,6 +207,11 @@ class BinomialHeap:
         return res
 
     def union(self, another):
+        """
+        Combine two binomial heaps into one.
+
+        :param another: other binomial heap
+        """
         node = self.head
         while node.rest is not None:
             node = node.rest
